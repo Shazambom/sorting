@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
-const NUM_BARS = 150;
+const NUM_BARS = 475;
+const FAST_SORT_SPEED = 5;
+const SLOW_SORT_SPEED = 0;
 class App extends Component {
     constructor(props) {
         super(props);
@@ -10,7 +12,7 @@ class App extends Component {
     }
 
     render() {
-      let width = 10;
+      let width = 3;
     return (
           <div className="App">
             <header className="App-header">
@@ -24,7 +26,7 @@ class App extends Component {
                 </div>
               <div className="row">
                 {this.state.arr.map((height) => {
-                  return <div className="column" style={{height: height * 5, width: width}}></div>
+                  return <div className="column" style={{height: height * 1.5, width: width}}></div>
                 })}
               </div>
             </header>
@@ -36,10 +38,7 @@ class App extends Component {
         for (let i = 0; i < arr.length; i++) {
             for (let j = 0; j + 1 < arr.length - i; j++) {
                 if (arr[j] > arr[j + 1]) {
-                    let temp = arr[j + 1];
-                    arr[j + 1] = arr[j];
-                    arr[j] = temp;
-                    await this.setArrSlow(arr, 0.5)
+                    await this.swap(arr, j, j + 1, SLOW_SORT_SPEED);
                 }
             }
         }
@@ -58,10 +57,7 @@ class App extends Component {
             }
             for (let i = 0; i + gap < arr.length; i++) {
                 if (arr[i] > arr[i + gap]) {
-                    let temp = arr[i];
-                    arr[i] = arr[i + gap];
-                    arr[i + gap] = temp;
-                    await this.setArrSlow(arr, 10);
+                    await this.swap(arr, i, i + gap, FAST_SORT_SPEED);
                     sorted = false;
                 }
             }
@@ -75,10 +71,10 @@ class App extends Component {
             while (j >= 0 && arr[j] > x) {
                 arr[j + 1] = arr[j];
                 j -= 1;
-                await this.setArrSlow(arr, 0.5);
+                await this.setArrSlow(arr, SLOW_SORT_SPEED);
             }
             arr[j + 1] = x;
-            await this.setArrSlow(arr, 0.5);
+            await this.setArrSlow(arr, SLOW_SORT_SPEED);
         }
     }
 
@@ -94,7 +90,7 @@ class App extends Component {
         let merged = this.merge(leftArr, rightArr);
         for (let i = left; i < right; i++) {
             arr[i] = merged[i - left];
-            await this.setArrSlow(arr, 10);
+            await this.setArrSlow(arr, FAST_SORT_SPEED);
         }
     };
 
@@ -127,17 +123,11 @@ class App extends Component {
         let i = left;
         for (let j = left; j < right - 1; j++) {
             if (arr[j] < pivot) {
-                let temp = arr[j];
-                arr[j] = arr[i];
-                arr[i] = temp;
+                await this.swap(arr, i, j, FAST_SORT_SPEED);
                 i += 1;
-                await this.setArrSlow(arr, 10);
             }
         }
-        let temp = arr[i];
-        arr[i] = pivot;
-        arr[right - 1] = temp;
-        await this.setArrSlow(arr, 10);
+        await this.swap(arr, i, right - 1, FAST_SORT_SPEED);
         return i;
     };
 
@@ -155,6 +145,12 @@ class App extends Component {
         }
         return arr;
     };
+    async swap(arr, a, b, time) {
+        let temp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = temp;
+        await this.setArrSlow(arr, time);
+    }
     async setArrSlow(arr, time) {
         this.setState({arr: arr});
         await new Promise(resolve => setTimeout(resolve, time));
