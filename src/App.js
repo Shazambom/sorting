@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import './App.css';
-const NUM_BARS = 475;
-const FAST_SORT_SPEED = 5;
+
+const NUM_BARS = 2048;
+const FAST_SORT_SPEED = 0;
 const SLOW_SORT_SPEED = 0;
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -12,26 +14,35 @@ class App extends Component {
     }
 
     render() {
-      let width = 3;
-    return (
-          <div className="App">
-            <header className="App-header">
-                <div className="row">
-                    <button className="button" onClick={() => this.merge_sort(this.state.arr.slice(), 0, this.state.arr.length)}>MergeSort</button>
-                    <button className="button" onClick={() => this.quick_sort(this.state.arr.slice(), 0, this.state.arr.length)}>QuickSort</button>
-                    <button className="button" onClick={() => this.comb_sort(this.state.arr.slice())}>CombSort</button>
-                    <button className="button" onClick={() => this.bubble_sort(this.state.arr.slice())}>BubbleSort</button>
-                    <button className="button" onClick={() => this.insertion_sort(this.state.arr.slice())}>InsertionSort</button>
-                    <button className="button" onClick={() => this.setState({arr: this.genVals(NUM_BARS)})}>Scramble</button>
-                </div>
-              <div className="row">
-                {this.state.arr.map((height) => {
-                  return <div className="column" style={{height: height * 1.5, width: width}}></div>
-                })}
+          let width = 10;
+          let bbp = 32;
+          let grid = [];
+          for (let i = 0; i < NUM_BARS / bbp; i++) {
+              let currArr = this.state.arr.slice(i * bbp, (i * bbp) + bbp);
+              grid.push(<div className="row">
+                  {currArr.map((height) => {
+                      let color = (Math.round((height * 1.0 / NUM_BARS) * 16777216)).toString(16);
+                      return <div className="column"
+                                  style={{height: width, width: width * 4, backgroundColor: `#${color}`}}></div>;
+                  })}
+              </div>);
+          }
+
+        return (
+              <div className="App">
+                <header className="App-header">
+                    <div className="row">
+                        <button className="button" onClick={() => this.merge_sort(this.state.arr.slice(), 0, this.state.arr.length)}>MergeSort</button>
+                        <button className="button" onClick={() => this.quick_sort(this.state.arr.slice(), 0, this.state.arr.length)}>QuickSort</button>
+                        <button className="button" onClick={() => this.comb_sort(this.state.arr.slice())}>CombSort</button>
+                        <button className="button" onClick={() => this.bubble_sort(this.state.arr.slice())}>BubbleSort</button>
+                        <button className="button" onClick={() => this.insertion_sort(this.state.arr.slice())}>InsertionSort</button>
+                        <button className="button" onClick={() => this.setState({arr: this.genVals(NUM_BARS)})}>Scramble</button>
+                    </div>
+                    {grid}
+                </header>
               </div>
-            </header>
-          </div>
-        );
+            );
     }
 
     async bubble_sort (arr) {
