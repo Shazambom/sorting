@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 
-const NUM_BARS = 43;
-const NUM_ARR = 20;
+const NUM_BARS = 42;
+const NUM_ARR = 30;
 
 const Rainbow = require('rainbowvis.js');
 const rainbow = new Rainbow();
@@ -18,7 +18,7 @@ class App extends Component {
     }
 
     render() {
-          let width = 20;
+          let width = 20.25;
           let grid = [];
           for (let i = 0; i < NUM_ARR; i++) {
               let currArr = this.state.arr[i];
