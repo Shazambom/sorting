@@ -1,5 +1,7 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+This project is a visualization of Merge, Quick, Comb, Bubble, and Insertion Sorting algorithms. To run simply run npm install then npm start. Have fun, you can try to play around with how react renders the visualization to get interesting patterns.
+
 ## Available Scripts
 
 In the project directory, you can run:
